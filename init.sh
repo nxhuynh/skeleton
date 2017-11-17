@@ -6,6 +6,7 @@ npm i --save bignumber.js react react-dom
 npm i --save oo7 
 npm i --save oo7-parity
 npm i --save oo7-react
+npm i --save semantic-ui-react@0.76.0
 npm i --save parity-reactive-ui
 
 echo "All installed."
