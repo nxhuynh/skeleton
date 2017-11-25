@@ -49,7 +49,8 @@ export class App extends React.Component {
     constructor() {
         super();
         this.counter = bonds.makeContract('0x2f164799a258c1F65DD3B551ed16C53Dd844410c', CounterABI);
-        console.log('got here');
+        this.state = { tx: null };
+        this.prevVote = this.counter.Voted({ who: bonds.me });
     }
 
    	render() {
@@ -63,12 +64,18 @@ export class App extends React.Component {
                     <a
                         style={{float: 'left', minWidth: '3em'}}
                         href='#'
-                        onClick={() => this.counter.vote(i)}
+                        onClick={() => this.setState({tx: this.counter.vote(i)})}
                     >
                         {n}
                     </a>
                 </Rspan>
             </div>))}
+            <div style={{marginTop: '1em'}}>
+                <TransactionProgressLabel value={this.state.tx}/>
+            </div>
+            <Rspan>
+                {this.prevVote.map(v => v.length > 0 ? `Already voted for ${Options[v[0].option]}` : '')}
+            </Rspan>
         </div>);
 	}
 }
