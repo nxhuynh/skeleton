@@ -10,6 +10,16 @@ export class App extends React.Component {
         window.bonds = bonds;
         this.name = new Bond;
         this.recipient = bonds.registry.lookupAddress(this.name, 'A');
+        this.state = { current: null };
+    }
+
+    give() {
+        this.setState({
+            current: bonds.post({
+                to: this.recipient,
+                value: 100 * 1e16
+            })
+        })
     }
 
    	render() {
@@ -18,8 +28,10 @@ export class App extends React.Component {
             <BButton
                 content={this.name.map(n => `Give ${n} 1 ETH`)}
                 disabled={this.recipient.map(isNullData)}
-                onClick={() => bonds.post({to: this.recipient, value: 100 * 1e16})}
+                onClick={this.give.bind(this)}
             />
+            <br/>
+            <Rspan>{this.state.current && this.state.current.map(JSON.stringify)}</Rspan>
         </div>);
 	}
 }
