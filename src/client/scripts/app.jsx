@@ -1,11 +1,6 @@
 import React from 'react';
-import {Bond, TimeBond} from 'oo7';
 import {Rspan} from 'oo7-react';
-import {InputBond} from 'parity-reactive-ui';
-import {bonds, formatBlockNumber, formatBalance, sha3} from 'oo7-parity';
-
-const computeColor = t => t.match(/^[0-9]+$/) ? {color: 'red'} : {color: 'black'}
-const format = ([msg, t]) => `${new Date(t)}: ${msg}`
+import {bonds, formatBalance} from 'oo7-parity';
 
 export class App extends React.Component {
     constructor() {
@@ -13,13 +8,16 @@ export class App extends React.Component {
         window.bonds = bonds;
     }
 
-	render() {
-        var parity2 = bonds.registry.lookupAddress('parity-2', 'A');
-        bonds.namesOf(bonds.me).log();
-        return(<div>
-            <Rspan>{bonds.registry.lookupAddress('parity-2', 'A')}</Rspan>
+    render() {
+        return (<div>
+            Accounts available:&nbsp;
+            <Rspan>{bonds.accounts.map(_=>_.join(', '))}</Rspan>
             <br/>
-            <Rspan>{bonds.balance(parity2).map(formatBalance)}</Rspan>
+            Default account:&nbsp;
+            <Rspan>{bonds.me}</Rspan>
+            <br/>
+            With a balance of&nbsp;
+            <Rspan>{bonds.balance(bonds.me).map(formatBalance)}</Rspan>
         </div>);
-	}
+    }
 }
