@@ -2,7 +2,7 @@ import React from 'react';
 import {Bond, TimeBond} from 'oo7';
 import {Rspan} from 'oo7-react';
 import {InputBond} from 'parity-reactive-ui';
-import {bonds} from 'oo7-parity';
+import {bonds, formatBlockNumber, formatBalance, sha3} from 'oo7-parity';
 
 const computeColor = t => t.match(/^[0-9]+$/) ? {color: 'red'} : {color: 'black'}
 const format = ([msg, t]) => `${new Date(t)}: ${msg}`
@@ -14,11 +14,12 @@ export class App extends React.Component {
     }
 
 	render() {
-		return (<div>
-            Latest block's timestamp is:&nbsp;
-            <Rspan style={{fontWeight: 'bold'}}>
-                {bonds.head.timestamp.map(_=>_.toString())}
-	        </Rspan>
-		</div>);
+        var parity2 = bonds.registry.lookupAddress('parity-2', 'A');
+        bonds.namesOf(bonds.me).log();
+        return(<div>
+            <Rspan>{bonds.registry.lookupAddress('parity-2', 'A')}</Rspan>
+            <br/>
+            <Rspan>{bonds.balance(parity2).map(formatBalance)}</Rspan>
+        </div>);
 	}
 }
