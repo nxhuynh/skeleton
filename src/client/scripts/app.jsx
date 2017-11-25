@@ -8,16 +8,13 @@ export class App extends React.Component {
         window.bonds = bonds;
     }
 
-    render() {
-        return (<div>
-            Accounts available:&nbsp;
-            <Rspan>{bonds.accounts.map(_=>_.join(', '))}</Rspan>
+   	render() {
+        var parity2 = bonds.registry.lookupAddress('parity-2', 'A');
+        bonds.namesOf(bonds.me).log();
+        return(<div>
+            <Rspan>{bonds.registry.lookupAddress('parity-2', 'A')}</Rspan>
             <br/>
-            Default account:&nbsp;
-            <Rspan>{bonds.me}</Rspan>
-            <br/>
-            With a balance of&nbsp;
-            <Rspan>{bonds.balance(bonds.me).map(formatBalance)}</Rspan>
+            <Rspan>{bonds.balance(parity2).map(formatBalance)}</Rspan>
         </div>);
-    }
+	}
 }
