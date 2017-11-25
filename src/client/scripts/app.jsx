@@ -60,9 +60,13 @@ export class App extends React.Component {
                         .votes(i)
                         .map(v => `${1 + v * 10}px black solid`)
                 }}>
-                    <span style={{float: 'left', minWidth: '3em'}}>
+                    <a
+                        style={{float: 'left', minWidth: '3em'}}
+                        href='#'
+                        onClick={() => this.counter.vote(i)}
+                    >
                         {n}
-                    </span>
+                    </a>
                 </Rspan>
             </div>))}
         </div>);
