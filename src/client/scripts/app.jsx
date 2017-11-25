@@ -1,7 +1,7 @@
 import React from 'react';
 import {Bond} from 'oo7';
 import {Rspan} from 'oo7-react';
-import {InputBond, HashBond, BButton} from 'parity-reactive-ui';
+import {InputBond, HashBond, BButton, TransactionProgressLabel, TransactButton} from 'parity-reactive-ui';
 import {bonds, formatBalance, isNullData} from 'oo7-parity';
 
 export class App extends React.Component {
@@ -25,13 +25,16 @@ export class App extends React.Component {
    	render() {
         return(<div>
             <InputBond bond={this.name} placeholder='Name of recipient' />
-            <BButton
+            <TransactButton
                 content={this.name.map(n => `Give ${n} 1 ETH`)}
                 disabled={this.recipient.map(isNullData)}
-                onClick={this.give.bind(this)}
+                tx={{
+                    to: this.recipient,
+                    value: 100 * 1e16
+                }}
             />
             <br/>
-            <Rspan>{this.state.current && this.state.current.map(JSON.stringify)}</Rspan>
+            <TransactionProgressLabel value={this.state.current}/>
         </div>);
 	}
 }
