@@ -206,8 +206,8 @@ const LinkedListABI = [
 export class App extends React.Component {
     constructor() {
         super();
-        this.linkedlist = bonds.makeContract('0x4B906e65401AEc3722ce007b51d5B547fc336fD6', LinkedListABI);
-        //this.prevVote = this.counter.Voted({ who: bonds.me });
+        this.linkedlist = bonds.makeContract('0xaD995dcE761154CB58933CF67be71c36f45D234E', LinkedListABI);
+        //this.linkedlist = bonds.makeContract('0x4B906e65401AEc3722ce007b51d5B547fc336fD6', LinkedListABI);
         //this.linkedlist.total().log();
         this.head = this.linkedlist.head();
         this.node_is = new Bond;
@@ -218,13 +218,29 @@ export class App extends React.Component {
         var len = this.linkedlist.length();
         len.then(b => console.log(b.equals('2')));
         //len.log();
+        this.reached_end = false;
+    }
+
+    print_array(array) {
+        for (var i in array) {
+            console.log(array[i]);
+        }
+    }
+
+    process_next_node(next_id, array) {
+        var cur_node = this.linkedlist.objects(next_id);
+        cur_node.then(c => {
+            array.push(c);
+            if (c[0] != '' && c[2] != ''){
+                this.process_next_node(c[0], array);
+            } else {
+                this.print_array(array);
+            }
+        });
     }
 
    	render() {
         //this.head.log();
-        console.log('====');
-        //this.linkedlist.getEntry(this.head).log();
-        console.log('*****');
 /*
         var total = this.linkedlist.total().c[0];
         console.log(total);
@@ -254,6 +270,23 @@ export class App extends React.Component {
                 {this.prevVote.map(v => v.length > 0 ? `Already voted for ${Options[v[0].option]}` : '')}
             </Rspan>
         </div>);
+        */
+        var array = [];
+        this.process_next_node(this.head, array);
+        /*
+        var count = 0;
+        while (this.reached_end == false || count > 3) {
+            var cur_node = this.linkedlist.objects(this.head);
+            cur_node.then(c => {
+                console.log(c);
+                if (c[0] != '' && c[2] != '') {
+                    this.cur_node = c[0];
+                } else {
+                    this.reached_end = true;
+                }
+                count++;
+            });
+        }
         */
         return(<div>
             <a onClick={() => {
