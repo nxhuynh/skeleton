@@ -258,17 +258,17 @@ export class App extends React.Component {
         return(<div>
             <a onClick={() => {
                 var cur_node = this.linkedlist.objects(this.cur_node);
-                cur_node.then(cur => {
-                    console.log(cur[0] != '');
-                    if (cur[0] != '')) {
-                        cur.log();
-                        //this.cur_node = cur_node[0];
+                cur_node.then(c => {
+                    console.log(c);
+                    console.log(c[0] != '');
+                    if (c[0] != '') {
+                        this.cur_node = c[0];
                     } else {
                         console.log('reached the end of linked list');
                     }
                 });
-            }>
-                getEntry
+            }}>
+                get entry
             </a>
         </div>);
 	}
