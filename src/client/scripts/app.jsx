@@ -203,6 +203,215 @@ const LinkedListABI = [
   }
 ];
 
+const LicenceLinkedListABI = [
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "length",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "head",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_id",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getEntry",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes32"
+      },
+      {
+        "name": "",
+        "type": "string"
+      },
+      {
+        "name": "",
+        "type": "string"
+      },
+      {
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "name": "objects",
+    "outputs": [
+      {
+        "name": "next",
+        "type": "bytes32"
+      },
+      {
+        "name": "longitude",
+        "type": "string"
+      },
+      {
+        "name": "latitude",
+        "type": "string"
+      },
+      {
+        "name": "day",
+        "type": "uint256"
+      },
+      {
+        "name": "month",
+        "type": "uint256"
+      },
+      {
+        "name": "year",
+        "type": "uint256"
+      },
+      {
+        "name": "licence",
+        "type": "bytes32"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_longitude",
+        "type": "string"
+      },
+      {
+        "name": "_latitude",
+        "type": "string"
+      },
+      {
+        "name": "_day",
+        "type": "uint256"
+      },
+      {
+        "name": "_month",
+        "type": "uint256"
+      },
+      {
+        "name": "_year",
+        "type": "uint256"
+      },
+      {
+        "name": "_licence",
+        "type": "bytes32"
+      }
+    ],
+    "name": "addEntry",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "head",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "longitude",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "name": "latitude",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "name": "day",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "name": "month",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "name": "year",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "name": "licence",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "next",
+        "type": "bytes32"
+      }
+    ],
+    "name": "AddEntry",
+    "type": "event"
+  }
+];
+
 const MyMapComponent = withScriptjs(withGoogleMap((props) =>
   <GoogleMap
     defaultZoom={12}
@@ -225,9 +434,12 @@ const MyMapComponent1 = withScriptjs(withGoogleMap((props) =>
 ));
 
 export class App extends React.Component {
-    constructor() {
-        super();
-        this.linkedlist = bonds.makeContract('0xaD995dcE761154CB58933CF67be71c36f45D234E', LinkedListABI);
+    constructor(props) {
+        super(props);
+        //lorien
+        //this.linkedlist = bonds.makeContract('0xaD995dcE761154CB58933CF67be71c36f45D234E', LinkedListABI);
+        this.linkedlist = bonds.makeContract('0xE03800CB9735a7f9Cc3FAB4A9D8062fec23e481C', LicenceLinkedListABI);
+        //rivendell
         //this.linkedlist = bonds.makeContract('0x4B906e65401AEc3722ce007b51d5B547fc336fD6', LinkedListABI);
         //this.linkedlist.total().log();
         this.head = this.linkedlist.head();
@@ -240,12 +452,26 @@ export class App extends React.Component {
         len.then(b => console.log(b.equals('2')));
         //len.log();
         this.reached_end = false;
+        this.state = { markers: [], read_blockchain: false, };
     }
 
     print_array(array) {
+        var local_markers = [];
         for (var i in array) {
             console.log(array[i]);
+            var lat = parseFloat(array[i][1]);
+            var lon = parseFloat(array[i][2]);
+            var licence = array[i][6];
+            local_markers.push([lat, lon, licence]);
+            console.log(local_markers.length);
         }
+        
+        this.setState({
+            markers: local_markers,
+            read_blockchain: true,
+        });
+        
+
     }
 
     process_next_node(next_id, array) {
@@ -293,7 +519,9 @@ export class App extends React.Component {
         </div>);
         */
         var array = [];
-        this.process_next_node(this.head, array);
+        if (!this.state.read_blockchain) {
+            this.process_next_node(this.head, array);
+        }
         /*
         var count = 0;
         while (this.reached_end == false || count > 3) {
@@ -332,7 +560,7 @@ var locations = [[30.281701, -97.741932], [30.272704, -97.741127]];
         return(<div>
             <MyMapComponent1
   isMarkerShown
-  loc={locations}
+  loc={this.state.markers}
   googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
   loadingElement={<div style={{ height: `100%` }} />}
   containerElement={<div style={{ height: `800px` }} />}
