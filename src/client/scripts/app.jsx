@@ -4,7 +4,7 @@ import {Rspan} from 'oo7-react';
 import {InputBond, HashBond, BButton, TransactionProgressLabel, TransactButton} from 'parity-reactive-ui';
 import {bonds, formatBalance, isNullData} from 'oo7-parity';
 import {equals} from 'bignumber.js';
-import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps"
+import { GoogleMapLoader, withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps"
 
 const LinkedListABI = [
   {
@@ -205,10 +205,22 @@ const LinkedListABI = [
 
 const MyMapComponent = withScriptjs(withGoogleMap((props) =>
   <GoogleMap
-    defaultZoom={8}
-    defaultCenter={{ lat: -34.397, lng: 150.644 }}
+    defaultZoom={12}
+    defaultCenter={{ lat: 30.285833, lng: -97.739421 }}
   >
-    {props.isMarkerShown && <Marker position={{ lat: -34.397, lng: 150.644 }} />}
+    <Marker position={{ lat: 30.281701, lng: -97.741932 }} /> 
+    <Marker position={{ lat: 30.272704, lng: -97.741127 }} />
+  </GoogleMap>
+));
+
+const MyMapComponent1 = withScriptjs(withGoogleMap((props) =>
+  <GoogleMap
+    defaultZoom={12}
+    defaultCenter={{ lat: 30.285833, lng: -97.739421 }}
+  >
+    {
+        props.loc.map((location, i) => <Marker key={i} position={{ lat: location[0], lng: location[1] }} />)
+    }
   </GoogleMap>
 ));
 
@@ -315,14 +327,39 @@ export class App extends React.Component {
             </a>
         </div>);
 */
+var locations = [[30.281701, -97.741932], [30.272704, -97.741127]];
+
         return(<div>
-            <MyMapComponent
+            <MyMapComponent1
   isMarkerShown
+  loc={locations}
   googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
   loadingElement={<div style={{ height: `100%` }} />}
-  containerElement={<div style={{ height: `400px` }} />}
+  containerElement={<div style={{ height: `800px` }} />}
   mapElement={<div style={{ height: `100%` }} />}
 />
             </div>);
-	}
+/*
+        return(<div>
+            <GoogleMapLoader
+              containerElement={
+                <div
+                  style={{
+                    height: `100%`
+                  }}
+                />
+              }
+              googleMapElement={
+                <GoogleMap
+                  defaultZoom={10}
+                  defaultCenter={{ lat: 30.281701, lng: -97.741932}}
+                >
+                    <Marker position={{ lat : 30.281701, lng : -97.741932 }}/>
+                  
+                </GoogleMap>
+              }
+            />
+            </div>);
+*/
+    }
 }
